@@ -22,5 +22,34 @@ async function fetchPosts(params) {
 
   return posts;
 }
+const postsWithMoreData = async (posts) => {
+  return await Promise.all(
+    posts.map(async post => {
+      try {
+        const response = await axios.get(
+          `https://jsonplaceholder.typicode.com/albums/${post.id}/photos`,
+          {
+            params: {
+              _start: 0,
+              _limit: 3,
+            },
+          },
+        );
+        const photos = response.data;
+        const images = photos.map(photo => photo.url);
 
-module.exports = { fetchPosts };
+        
+
+        return {
+          ...post,
+          images,
+        };
+      } catch (error) {
+        console.error('Error fetching photos:', error);
+        return post; // Return the original post if there's an error
+      }
+    }),
+  );
+};
+
+module.exports = { fetchPosts,postsWithMoreData };
