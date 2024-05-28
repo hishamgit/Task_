@@ -27,6 +27,8 @@ const Table = styled.table(() => ({
 }));
 
 function UserList(){
+  
+  // Destructure the values from the useUserData hook
     const {
       users,
       handleOnSearch,

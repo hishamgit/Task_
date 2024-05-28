@@ -11,6 +11,7 @@ const columnFields = [
     { value: 'website', label: 'Website' },
   ];
   
+  // Custom hook for managing user data
   const useUserData = () => {
     const [users, setUsers] = useState([]);
     const [filteredUsers, setFilteredUsers] = useState([]);
@@ -19,6 +20,7 @@ const columnFields = [
     const [sortColumn, setSortColumn] = useState(columnFields[0].value);
     const [sortDirection, setSortDirection] = useState('asc');
   
+    // Effect to fetch user data from the API when the component mounts
     useEffect(() => {
       const fetchUsers = async () => {
         try {
@@ -33,6 +35,7 @@ const columnFields = [
       fetchUsers();
     }, []);
   
+    // Effect to filter and sort users based on search inputs and sort settings
     useEffect(() => {
       let newFilteredUsers = users.filter(
         user =>
@@ -53,6 +56,7 @@ const columnFields = [
       setFilteredUsers(newFilteredUsers);
     }, [searchName, searchEmail, users, sortColumn, sortDirection]);
   
+    // Callback to handle search input changes
     const handleOnSearch = useCallback((event) => {
       const { name, value } = event.target;
       if (name === 'name') {
@@ -64,6 +68,7 @@ const columnFields = [
       }
     }, []);
   
+    // Callback to handle sorting column changes
     const handleSort = useCallback((column) => {
       if (sortColumn === column) {
         setSortDirection(prevDirection => prevDirection === 'asc' ? 'desc' : 'asc');

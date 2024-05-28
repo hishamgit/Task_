@@ -30,6 +30,7 @@ const postsWithMoreData = async (posts) => {
   return await Promise.all(
     posts.map(async post => {
       try {
+        // Fetch related photos for the post
         const response = await axios.get(
           `https://jsonplaceholder.typicode.com/albums/${post.id}/photos`,
           {
@@ -42,6 +43,7 @@ const postsWithMoreData = async (posts) => {
         const photos = response.data;
         const images = photos.map(photo => photo.url);
 
+        // Fetch user details by user ID
         const { name, email, firstName, lastName } = await fetchUserById(
           post.userId,
         );

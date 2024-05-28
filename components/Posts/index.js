@@ -1,9 +1,9 @@
 import axios from 'axios';
-import React, { useEffect, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import styled from '@emotion/styled';
 import Post from './Post';
 import Container from '../common/Container';
-import useWindowWidth from '../hooks/useWindowWidth';
+import { WindowWidthContext } from '../hooks/windowWidthContext';
 
 const PostListContainer = styled.div(() => ({
   display: 'flex',
@@ -37,8 +37,9 @@ export default function Posts() {
   const [isLoading, setIsLoading] = useState(false);
   const [dataEnd, setDataEnd] = useState(false);
 
-  const { isSmallerDevice } = useWindowWidth();
-
+  const { isSmallerDevice } = useContext(WindowWidthContext);
+  
+  // Effect to fetch initial posts when component mounts or isSmallerDevice changes
   useEffect(() => {
     const fetchPost = async () => {
       const { data: posts } = await axios.get('/api/v1/posts', {
@@ -50,6 +51,7 @@ export default function Posts() {
     fetchPost();
   }, [isSmallerDevice]);
 
+  // Handler to fetch more posts when Load More button is clicked
   const handleClick = async () => {
     setIsLoading(true);
     const { data: newPosts } = await axios.get('/api/v1/posts', {
