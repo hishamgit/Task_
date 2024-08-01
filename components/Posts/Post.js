@@ -9,6 +9,29 @@ const PostContainer = styled.div(() => ({
   borderRadius: '5px',
   overflow: 'hidden',
 }));
+const UserInitial = styled.div(() => ({
+  display: 'inline-block',
+  width: '40px',
+  height: '40px',
+  paddingBottom: '15px',
+  paddingInline:'8px',
+  borderRadius: '50%',
+  backgroundColor: '#808080',
+  color: '#ffffff',
+  textAlign: 'center',
+  lineHeight: '55px',
+  fontWeight: 'bold',
+  fontSize: '20px',
+  margin: '10px',
+  marginBottom: '0px',
+}));
+const UserData = styled.div(() => ({
+  display: 'inline-block',
+  flexDirection: 'column',
+  alignItems: 'center',
+  textAlign:'centre',
+  marginTop:'10px',
+}));
 
 const CarouselContainer = styled.div(() => ({
   position: 'relative',
@@ -46,7 +69,7 @@ const Content = styled.div(() => ({
 
 const Button = styled.button(() => ({
   position: 'absolute',
-  bottom: 0,
+  top: '45%',
   backgroundColor: 'rgba(255, 255, 255, 0.5)',
   border: 'none',
   color: '#000',
@@ -86,11 +109,23 @@ const Post = ({ post }) => {
 
   return (
     <PostContainer>
+      <div >
+        <UserInitial>
+          <span>{post.firstName.charAt(0)}</span>
+          <span>{post.lastName.charAt(0)}</span>
+        </UserInitial>
+        <UserData>
+          <h3 className="font-size: 10px; font-weight: bold;  margin-bottom: 8px">
+            {post.name}
+          </h3>
+          <p className="font-size: 16px; color: #888;">{post.email}</p>
+        </UserData>
+      </div>
       <CarouselContainer>
         <Carousel ref={carouselRef}>
           {post.images.map((image, index) => (
             <CarouselItem key={index}>
-              <Image src={image.url} alt={post.title} />
+              <Image src={image} alt={post.title} />
             </CarouselItem>
           ))}
         </Carousel>
@@ -108,9 +143,7 @@ const Post = ({ post }) => {
 Post.propTypes = {
   post: PropTypes.shape({
     content: PropTypes.any,
-    images: PropTypes.shape({
-      map: PropTypes.func,
-    }),
+    images: PropTypes.arrayOf(PropTypes.string),
     title: PropTypes.any,
   }),
 };

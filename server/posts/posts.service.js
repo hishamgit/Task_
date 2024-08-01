@@ -1,4 +1,7 @@
+const { fetchUserById } = require('../users/users.service');
+
 const axios = require('axios').default;
+
 
 /**
  * Fetches posts from a remote API.
@@ -23,4 +26,41 @@ async function fetchPosts(params) {
   return posts;
 }
 
-module.exports = { fetchPosts };
+const postsWithMoreData = async (posts) => {
+  return await Promise.all(
+    posts.map(async post => {
+      try {
+        // Fetch related photos for the post
+        const response = await axios.get(
+          `https://jsonplaceholder.typicode.com/albums/${post.id}/photos`,
+          {
+            params: {
+              _start: 0,
+              _limit: 3,
+            },
+          },
+        );
+        const photos = response.data;
+        const images = photos.map(photo => photo.url);
+
+        // Fetch user details by user ID
+        const { name, email, firstName, lastName } = await fetchUserById(
+          post.userId,
+        );
+
+        return {
+          ...post,
+          images,
+          name,
+          firstName,
+          lastName,
+          email,
+        };
+      } catch (error) {
+        console.error('Error fetching photos:', error);
+        return post; // Return the original post if there's an error
+      }
+    }),
+  );
+};
+module.exports = { fetchPosts, postsWithMoreData };
